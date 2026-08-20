@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080808">
+
+<title>PISIT HUB • Dashboard</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+:root{
+    --red:#ff3030;
+    --red-dark:#b81717;
+    --bg:#060606;
+    --card:#111;
+    --border:#292929;
+    --text:#f5f5f5;
+    --muted:#888;
+}
+
+body{
+    min-height:100vh;
+    background:
+        radial-gradient(
+            circle at 50% -15%,
+            #4a1010 0%,
+            #1b0707 25%,
+            #090909 55%,
+            #050505 100%
+        );
+    color:var(--text);
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+/* =========================
+   NAVBAR
+========================= */
+
+.navbar{
+    height:65px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:0 7%;
+
+    border-bottom:1px solid #202020;
+    background:rgba(5,5,5,.8);
+    backdrop-filter:blur(12px);
+
+    position:sticky;
+    top:0;
+    z-index:100;
+}
+
+.brand{
+    font-size:19px;
+    font-weight:1000;
+    letter-spacing:3px;
+}
+
+.brand span{
+    color:var(--red);
+}
+
+.nav-status{
+    display:flex;
+    align-items:center;
+    gap:7px;
+
+    color:#777;
+    font-size:11px;
+}
+
+.dot{
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:#40d46b;
+    box-shadow:0 0 10px #40d46b;
+}
+
+/* =========================
+   HERO
+========================= */
+
+.hero{
+    text-align:center;
+    padding:70px 20px 45px;
+}
+
+.logo{
+    color:#ff3030;
+    font-family:monospace;
+    font-size:clamp(6px,1.5vw,13px);
+    line-height:1.08;
+    font-weight:900;
+    white-space:pre;
+    overflow:auto;
+    display:inline-block;
+    text-align:left;
+}
+
+.hub{
+    margin-top:10px;
+    font-size:29px;
+    font-weight:1000;
+    letter-spacing:11px;
+}
+
+.hero-text{
+    max-width:550px;
+    margin:15px auto 0;
+
+    color:#777;
+
+    font-size:13px;
+    line-height:1.7;
+}
+
+/* =========================
+   MAIN
+========================= */
+
+.container{
+    width:92%;
+    max-width:900px;
+    margin:auto;
+}
+
+/* =========================
+   CARDS
+========================= */
+
+.card{
+    background:
+        linear-gradient(
+            145deg,
+            rgba(23,23,23,.95),
+            rgba(9,9,9,.95)
+        );
+
+    border:1px solid var(--border);
+    border-radius:18px;
+
+    padding:20px;
+
+    margin-bottom:18px;
+
+    box-shadow:
+        0 15px 50px rgba(0,0,0,.3);
+}
+
+.card-title{
+    font-size:17px;
+    font-weight:900;
+    margin-bottom:5px;
+}
+
+.card-subtitle{
+    color:#666;
+    font-size:11px;
+    margin-bottom:17px;
+}
+
+/* =========================
+   UPLOAD BOX
+========================= */
+
+.upload-box{
+    margin-bottom:12px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:#080808;
+    border:1px dashed #333;
+    padding:12px 15px;
+    border-radius:11px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.upload-box:hover{
+    border-color:var(--red);
+}
+
+.upload-label{
+    color:#aaa;
+    font-size:12px;
+    font-weight:bold;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    width:100%;
+}
+
+.upload-label input{
+    display:none;
+}
+
+/* =========================
+   EDITOR
+========================= */
+
+.editor{
+    width:100%;
+    min-height:320px;
+
+    background:#050505;
+
+    border:1px solid #292929;
+    border-radius:13px;
+
+    padding:15px;
+
+    color:#eee;
+
+    outline:none;
+    resize:vertical;
+
+    font-family:
+        Consolas,
+        "Courier New",
+        monospace;
+
+    font-size:13px;
+    line-height:1.6;
+}
+
+.editor:focus{
+    border-color:#9f2828;
+
+    box-shadow:
+        0 0 0 2px
+        rgba(255,40,40,.06);
+}
+
+/* =========================
+   CONTROLS
+========================= */
+
+.controls{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-top:12px;
+
+    gap:10px;
+}
+
+.counter{
+    color:#666;
+    font-size:10px;
+}
+
+.clear-btn{
+    background:#171717;
+    color:#aaa;
+
+    border:1px solid #292929;
+
+    border-radius:9px;
+
+    padding:8px 12px;
+
+    cursor:pointer;
+}
+
+/* =========================
+   CREATE BUTTON
+========================= */
+
+.create-btn{
+    width:100%;
+
+    margin-top:15px;
+
+    padding:15px;
+
+    border:0;
+    border-radius:12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ff3535,
+            #b81616
+        );
+
+    color:white;
+
+    font-size:15px;
+    font-weight:900;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 8px 25px
+        rgba(255,30,30,.18);
+
+    transition:.2s;
+}
+
+.create-btn:hover{
+    filter:brightness(1.1);
+}
+
+.create-btn:active{
+    transform:scale(.985);
+}
+
+.create-btn:disabled{
+    opacity:.5;
+    cursor:not-allowed;
+}
+
+/* =========================
+   RESULT
+========================= */
+
+.result{
+    display:none;
+
+    margin-top:18px;
+
+    padding:16px;
+
+    background:#090909;
+
+    border:1px solid #292929;
+
+    border-radius:13px;
+}
+
+.result.show{
+    display:block;
+}
+
+.result-label{
+    color:#777;
+    font-size:10px;
+    margin-bottom:6px;
+    margin-top: 12px;
+}
+
+.result-label:first-child{
+    margin-top: 0;
+}
+
+.script-id{
+    color:#ff3b3b;
+
+    font-family:monospace;
+
+    font-size:26px;
+    font-weight:900;
+
+    letter-spacing:3px;
+
+    margin-bottom:5px;
+}
+
+.url-box{
+    display:flex;
+    gap:8px;
+}
+
+.url{
+    flex:1;
+
+    min-width:0;
+
+    background:#111;
+
+    border:1px solid #292929;
+
+    border-radius:9px;
+
+    padding:11px;
+
+    color:#ddd;
+
+    font-family:monospace;
+
+    font-size:11px;
+}
+
+.copy-btn{
+    border:1px solid #383838;
+
+    background:#181818;
+
+    color:white;
+
+    border-radius:9px;
+
+    padding:0 15px;
+
+    font-weight:800;
+
+    cursor:pointer;
+}
+
+.copy-btn:hover{
+    border-color:#b72828;
+}
+
+/* =========================
+   STATUS
+========================= */
+
+.status{
+    margin-top:12px;
+
+    padding:10px 12px;
+
+    border-radius:9px;
+
+    background:#090909;
+
+    border:1px solid #242424;
+
+    color:#777;
+
+    font-size:11px;
+}
+
+.status.success{
+    color:#65dc83;
+    border-color:#1d4728;
+}
+
+.status.error{
+    color:#ff5050;
+    border-color:#4a2020;
+}
+
+/* =========================
+   INFO
+========================= */
+
+.info-grid{
+    display:grid;
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap:10px;
+}
+
+.info{
+    background:#0b0b0b;
+
+    border:1px solid #252525;
+
+    border-radius:12px;
+
+    padding:14px;
+}
+
+.info-icon{
+    font-size:20px;
+    margin-bottom:8px;
+}
+
+.info-title{
+    font-size:12px;
+    font-weight:900;
+    margin-bottom:5px;
+}
+
+.info-text{
+    color:#666;
+    font-size:10px;
+    line-height:1.6;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.footer{
+    text-align:center;
+
+    color:#444;
+
+    font-size:10px;
+
+    padding:30px 0 20px;
+}
+
+@media(max-width:650px){
+
+    .navbar{
+        padding:0 5%;
+    }
+
+    .hero{
+        padding-top:50px;
+    }
+
+    .info-grid{
+        grid-template-columns:1fr;
+    }
+
+    .url-box{
+        flex-direction:column;
+    }
+
+    .copy-btn{
+        padding:12px;
+    }
+
+    .logo{
+        font-size:6px;
+    }
+
+    .hub{
+        font-size:22px;
+    }
+
+}
+</style>
+</head>
+
+<body>
+
+<!-- =========================
+     NAVBAR
+========================= -->
+
+<nav class="navbar">
+
+    <div class="brand">
+        PISIT <span>HUB</span>
+    </div>
+
+    <div class="nav-status">
+        <div class="dot"></div>
+        API ONLINE
+    </div>
+
+</nav>
+
+
+<!-- =========================
+     HERO
+========================= -->
+
+<section class="hero">
+
+<pre class="logo">██████╗ ██╗███████╗██╗████████╗
+██╔══██╗██║██╔════╝██║╚══██╔══╝
+██████╔╝██║███████╗██║   ██║
+██╔═══╝ ██║╚════██║██║   ██║
+██║     ██║███████║██║   ██║
+╚═╝     ╚═╝╚══════╝╚═╝   ╚═╝</pre>
+
+<div class="hub">
+HUB
+</div>
+
+<div class="hero-text">
+ระบบจัดการ Lua Script ของ PISIT HUB
+สร้าง Script ID และจัดเก็บข้อมูลผ่านระบบ Backend ของเรา
+</div>
+
+</section>
+
+
+<!-- =========================
+     MAIN
+========================= -->
+
+<main class="container">
+
+
+<!-- CREATE SCRIPT -->
+
+<div class="card">
+
+    <div class="card-title">
+        สร้าง Script
+    </div>
+
+    <div class="card-subtitle">
+        วาง Lua Script หรืออัปโหลดไฟล์ .txt / .lua ของมึงด้านล่าง
+    </div>
+
+
+    <!-- UPLOAD FILE BUTTON -->
+    <div class="upload-box">
+        <label class="upload-label">
+            📁 <span>อัปโหลดไฟล์ Script (.txt, .lua)</span>
+            <input type="file" id="fileInput" accept=".txt,.lua" onchange="loadScriptFile(event)">
+        </label>
+    </div>
+
+
+    <textarea
+        id="scriptInput"
+        class="editor"
+        spellcheck="false"
+        placeholder="-- วาง Lua Script ของมึงตรงนี้ หรืออัปโหลดไฟล์ด้านบน
+
+print('Hello PISIT HUB')"
+    ></textarea>
+
+
+    <div class="controls">
+
+        <div
+            class="counter"
+            id="counter"
+        >
+            0 characters
+        </div>
+
+        <button
+            class="clear-btn"
+            onclick="clearScript()"
+        >
+            ล้าง
+        </button>
+
+    </div>
+
+
+    <button
+        id="createButton"
+        class="create-btn"
+        onclick="createScript()"
+    >
+        ⚡ สร้าง Script ID
+    </button>
+
+
+    <div
+        id="status"
+        class="status"
+    >
+        สถานะ: พร้อมใช้งาน
+    </div>
+
+
+    <!-- RESULT -->
+
+    <div
+        id="result"
+        class="result"
+    >
+
+        <div class="result-label">
+            SCRIPT ID
+        </div>
+
+        <div
+            id="scriptId"
+            class="script-id"
+        >
+            ------
+        </div>
+
+
+        <!-- ลิงก์แบบธรรมดา -->
+        <div class="result-label">
+            SCRIPT URL (ลิงก์ตรง)
+        </div>
+
+        <div class="url-box">
+            <input
+                id="scriptUrl"
+                class="url"
+                readonly
+            >
+            <button
+                class="copy-btn"
+                onclick="copyText('scriptUrl', '✅ คัดลอกลิงก์ตรงแล้ว')"
+            >
+                คัดลอก
+            </button>
+        </div>
+
+
+        <!-- ลิงก์แบบพร้อมรัน loadstring -->
+        <div class="result-label">
+            LOADSTRING (พร้อมรันในตัวรัน)
+        </div>
+
+        <div class="url-box">
+            <input
+                id="loadstringUrl"
+                class="url"
+                readonly
+            >
+            <button
+                class="copy-btn"
+                onclick="copyText('loadstringUrl', '✅ คัดลอก Loadstring พร้อมรันแล้ว')"
+            >
+                คัดลอก
+            </button>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- INFORMATION -->
+
+<div class="card">
+
+    <div class="card-title">
+        PISIT HUB
+    </div>
+
+    <div class="card-subtitle">
+        ระบบปัจจุบัน
+    </div>
+
+
+    <div class="info-grid">
+
+        <div class="info">
+
+            <div class="info-icon">
+                ⚡
+            </div>
+
+            <div class="info-title">
+                Cloudflare Worker
+            </div>
+
+            <div class="info-text">
+                Backend ของระบบทำงานผ่าน Worker
+                โดยไม่ต้องเปิดคอมพิวเตอร์ทิ้งไว้
+            </div>
+
+        </div>
+
+
+        <div class="info">
+
+            <div class="info-icon">
+                🗄️
+            </div>
+
+            <div class="info-title">
+                KV Storage
+            </div>
+
+            <div class="info-text">
+                Script ที่สร้างจะถูกผูกกับ
+                Script ID ในระบบ Storage
+            </div>
+
+        </div>
+
+
+        <div class="info">
+
+            <div class="info-icon">
+                🔗
+            </div>
+
+            <div class="info-title">
+                Script URL
+            </div>
+
+            <div class="info-text">
+                แต่ละ Script จะได้รับ URL
+                ของตัวเองจาก Backend
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+</main>
+
+
+<!-- =========================
+     FOOTER
+========================= -->
+
+<footer class="footer">
+
+    PISIT HUB • Script Management System
+
+</footer>
+
+
+<script>
+
+/* =========================================================
+   PISIT HUB FRONTEND
+   ========================================================= */
+
+const API_URL =
+    "https://pisit-hub.qqe22462.workers.dev";
+
+
+const scriptInput =
+    document.getElementById("scriptInput");
+
+const counter =
+    document.getElementById("counter");
+
+const createButton =
+    document.getElementById("createButton");
+
+const statusBox =
+    document.getElementById("status");
+
+const resultBox =
+    document.getElementById("result");
+
+const scriptId =
+    document.getElementById("scriptId");
+
+const scriptUrl =
+    document.getElementById("scriptUrl");
+
+const loadstringUrl =
+    document.getElementById("loadstringUrl");
+
+
+/*
+============================================================
+COUNTER
+============================================================
+*/
+
+scriptInput.addEventListener(
+    "input",
+    updateCounter
+);
+
+
+function updateCounter(){
+    const length = scriptInput.value.length;
+    counter.textContent = length.toLocaleString() + " characters";
+}
+
+
+/*
+============================================================
+UPLOAD FILE HANDLER
+============================================================
+*/
+
+function loadScriptFile(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        scriptInput.value = e.target.result;
+        updateCounter();
+        setStatus("สถานะ: ✅ โหลดไฟล์ " + file.name + " สำเร็จ", "success");
+    };
+    reader.onerror = function() {
+        setStatus("สถานะ: ❌ อ่านไฟล์ไม่สำเร็จ", "error");
+    };
+    reader.readAsText(file);
+    
+    event.target.value = "";
+}
+
+
+/*
+============================================================
+CLEAR
+============================================================
+*/
+
+function clearScript(){
+    scriptInput.value = "";
+    updateCounter();
+    resultBox.classList.remove("show");
+    setStatus("สถานะ: พร้อมใช้งาน", "");
+}
+
+
+/*
+============================================================
+STATUS
+============================================================
+*/
+
+function setStatus(message, type = ""){
+    statusBox.textContent = message;
+    statusBox.className = "status";
+    if(type){
+        statusBox.classList.add(type);
+    }
+}
+
+
+/*
+============================================================
+CREATE SCRIPT
+============================================================
+*/
+
+async function createScript(){
+    const script = scriptInput.value.trim();
+
+    if(!script){
+        setStatus("สถานะ: กรุณาใส่ Lua Script หรืออัปโหลดไฟล์ก่อน", "error");
+        scriptInput.focus();
+        return;
+    }
+
+    createButton.disabled = true;
+    createButton.textContent = "⏳ กำลังสร้าง...";
+    resultBox.classList.remove("show");
+    setStatus("สถานะ: กำลังส่งข้อมูลไปยัง PISIT HUB...");
+
+    try{
+        const response = await fetch(
+            API_URL + "/api/create",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    script: script,
+                    level: "none"
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if(!response.ok || !data.ok){
+            throw new Error(data.error || "สร้าง Script ไม่สำเร็จ");
+        }
+
+        scriptId.textContent = data.id;
+        scriptUrl.value = data.url;
+        
+        // เติมรูปแบบพร้อมรันให้ช่องที่สองอัตโนมัติ
+        loadstringUrl.value = `loadstring(game:HttpGet("${data.url}"))()`;
+
+        resultBox.classList.add("show");
+        setStatus("สถานะ: ✅ สร้าง Script ID สำเร็จ", "success");
+
+    }catch(error){
+        console.error(error);
+        setStatus("สถานะ: ❌ " + error.message, "error");
+    }finally{
+        createButton.disabled = false;
+        createButton.textContent = "⚡ สร้าง Script ID";
+    }
+}
+
+
+/*
+============================================================
+COPY TEXT FUNCTION
+============================================================
+*/
+
+async function copyText(elementId, successMessage){
+    const inputElement = document.getElementById(elementId);
+    const value = inputElement.value;
+    
+    if(!value) return;
+
+    try{
+        await navigator.clipboard.writeText(value);
+    }catch{
+        inputElement.select();
+        document.execCommand("copy");
+    }
+
+    setStatus("สถานะ: " + successMessage, "success");
+}
+
+
+/*
+============================================================
+INITIALIZE
+============================================================
+*/
+
+updateCounter();
+
+</script>
+
+</body>
+</html>
