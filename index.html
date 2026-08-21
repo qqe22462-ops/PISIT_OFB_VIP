@@ -111,7 +111,7 @@ input:checked + .slider:before{transform:translateX(18px);background-color:#fff;
 ██████╔╝██║███████║██║   ██║
 ██╔═══╝ ██║╚════██║██║   ██║
 ██║     ██║███████║██║   ██║
-╚═╝     ╚═╝╚══════╝╚═╝   ╚═╝</pre>
+╚═╝     ╚═╝╚══════╚═╝   ╚═╝</pre>
 <div class="hub">HUB</div>
 <div class="hero-text">ระบบจัดการ Lua Script พร้อมระบบรหัสผ่านป้องกันการแก้ไข</div>
 </section>
@@ -261,7 +261,7 @@ async function createScript(){
     // ดึงค่า Turnstile token จากฟอร์ม
     const turnstileToken = document.querySelector('[name="cf-turnstile-response"]')?.value;
     if(!turnstileToken){
-        setStatus("สถานะ: ❌ กรุณายืนยันตัวตนผ่าน Turnstile ก่อนสร้าง Script", "error");
+        setStatus("สถานะ: ❌ กรุณารอติ๊กถูก Turnstile ก่อนสร้าง Script", "error");
         return;
     }
 
@@ -298,7 +298,7 @@ async function createScript(){
         resultBox.classList.add("show");
         setStatus("สถานะ: ✅ สร้าง Script ID สำเร็จ", "success");
 
-        // รีเซ็ต Turnstile widget หากต้องการให้ทำรายการใหม่
+        // รีเซ็ต Turnstile เฉพาะตอนสร้างสำเร็จเพื่อให้กดรอบต่อไปได้
         if (typeof turnstile !== 'undefined') {
             turnstile.reset();
         }
@@ -306,9 +306,7 @@ async function createScript(){
     }catch(error){
         console.error(error);
         setStatus("สถานะ: ❌ " + error.message, "error");
-        if (typeof turnstile !== 'undefined') {
-            turnstile.reset();
-        }
+        // ถ้าพัง ไม่ต้องรีเซ็ต Turnstile ตัวผู้ใช้จะได้ไม่ต้องติ๊กใหม่ถ้าแค่พิมพ์ผิด
     }finally{
         createButton.disabled = false;
         createButton.textContent = "⚡ สร้าง Script ID";
