@@ -54,11 +54,9 @@ body{
 .counter{color:#666;font-size:10px;}
 .clear-btn{background:#171717;color:#aaa;border:1px solid #292929;border-radius:9px;padding:8px 12px;cursor:pointer;}
 
-/* ส่วนเปิด-ปิดตั้งรหัสผ่าน */
 .password-section{margin-top:15px;background:#080808;border:1px solid #222;border-radius:12px;padding:15px;}
 .toggle-row{display:flex;align-items:center;justify-content:space-between;cursor:pointer;}
 .toggle-label{font-size:12px;font-weight:bold;color:#ccc;display:flex;align-items:center;gap:8px;}
-/* สวิตช์เปิดปิด */
 .switch{position:relative;display:inline-block;width:40px;height:22px;}
 .switch input{opacity:0;width:0;height:0;}
 .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:#222;transition:.3s;border-radius:22px;border:1px solid #333;}
@@ -109,7 +107,7 @@ input:checked + .slider:before{transform:translateX(18px);background-color:#fff;
 ██████╔╝██║███████║██║   ██║
 ██╔═══╝ ██║╚════██║██║   ██║
 ██║     ██║███████║██║   ██║
-╚═╝     ╚═╝╚══════╚═╝   ╚═╝</pre>
+╚═╝     ╚═╝╚══════╝╚═╝   ╚═╝</pre>
 <div class="hub">HUB</div>
 <div class="hero-text">ระบบจัดการ Lua Script พร้อมระบบรหัสผ่านป้องกันการแก้ไข</div>
 </section>
@@ -133,7 +131,6 @@ input:checked + .slider:before{transform:translateX(18px);background-color:#fff;
         <button class="clear-btn" onclick="clearScript()">ล้าง</button>
     </div>
 
-    <!-- ปุ่มเปิด-ปิดตั้งรหัสผ่าน -->
     <div class="password-section">
         <div class="toggle-row" onclick="togglePasswordBox()">
             <div class="toggle-label">🔒 ตั้งรหัสผ่านสำหรับแก้ไขสคริปต์นี้</div>
@@ -145,6 +142,11 @@ input:checked + .slider:before{transform:translateX(18px);background-color:#fff;
         <div class="pass-input-box" id="passInputBox">
             <input type="password" id="scriptPassword" class="pass-field" placeholder="ตั้งรหัสผ่าน (เช่น 1234 หรือตัวอักษร)">
         </div>
+    </div>
+
+    <div class="password-section" style="margin-top: 10px;">
+        <div style="font-size: 12px; font-weight: bold; color: #ccc; margin-bottom: 8px;">🔑 รหัสลับสำหรับสร้างสคริปต์ (Create Key)</div>
+        <input type="password" id="createKeyInput" class="pass-field" placeholder="กรอกรหัสสร้างสคริปต์..." value="pisit_secret_pass_1234">
     </div>
 
     <button id="createButton" class="create-btn" onclick="createScript()">⚡ สร้าง Script ID</button>
@@ -173,7 +175,8 @@ input:checked + .slider:before{transform:translateX(18px);background-color:#fff;
 <footer class="footer">PISIT HUB • Script Management System</footer>
 
 <script>
-const API_URL = "https://pisit-hub.qqe22462.workers.dev";
+// 🌐 ลิงก์ Cloudflare Worker ตัวใหม่ของมึง
+const API_URL = "https://pisithub1034747.kirsrsaema66.workers.dev";
 
 const scriptInput = document.getElementById("scriptInput");
 const counter = document.getElementById("counter");
@@ -186,6 +189,7 @@ const loadstringUrl = document.getElementById("loadstringUrl");
 const enablePass = document.getElementById("enablePass");
 const passInputBox = document.getElementById("passInputBox");
 const scriptPassword = document.getElementById("scriptPassword");
+const createKeyInput = document.getElementById("createKeyInput");
 
 scriptInput.addEventListener("input", updateCounter);
 
@@ -237,6 +241,7 @@ function setStatus(message, type = ""){
 async function createScript(){
     const script = scriptInput.value.trim();
     const password = enablePass.checked ? scriptPassword.value.trim() : "";
+    const createKey = createKeyInput.value.trim();
 
     if(!script){
         setStatus("สถานะ: กรุณาใส่ Lua Script หรืออัปโหลดไฟล์ก่อน", "error");
@@ -252,8 +257,15 @@ async function createScript(){
     try{
         const response = await fetch(API_URL + "/api/create", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ script: script, password: password })
+            headers: { 
+                "Content-Type": "application/json",
+                "X-Create-Key": createKey 
+            },
+            body: JSON.stringify({ 
+                script: script, 
+                password: password, 
+                createKey: createKey 
+            })
         });
 
         const data = await response.json();
