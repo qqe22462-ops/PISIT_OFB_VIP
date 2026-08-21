@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#080808">
 <title>PISIT HUB • Dashboard</title>
+<!-- โหลดสคริปต์ Cloudflare Turnstile -->
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{--red:#ff3030;--bg:#060606;--card:#111;--border:#292929;--text:#f5f5f5;--muted:#888;}
@@ -70,7 +72,9 @@ input:checked + .slider:before{transform:translateX(18px);background-color:#fff;
     width:100%;background:#050505;border:1px solid #292929;border-radius:9px;
     padding:11px;color:#fff;font-size:12px;outline:none;
 }
-.pass-field:focus{border-color:var(--red);}
+.pass-field:focus{border-color:#9f2828;}
+
+.turnstile-box{margin-top:15px;display:flex;justify-content:center;}
 
 .create-btn{
     width:100%;margin-top:15px;padding:15px;border:0;border-radius:12px;
@@ -147,6 +151,11 @@ input:checked + .slider:before{transform:translateX(18px);background-color:#fff;
     <div class="password-section" style="margin-top: 10px;">
         <div style="font-size: 12px; font-weight: bold; color: #ccc; margin-bottom: 8px;">🔑 รหัสลับสำหรับสร้างสคริปต์ (Create Key)</div>
         <input type="password" id="createKeyInput" class="pass-field" placeholder="กรอกรหัสสร้างสคริปต์..." value="pisit_secret_pass_1234">
+    </div>
+
+    <!-- Turnstile Widget Integration -->
+    <div class="turnstile-box">
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAAEXoKM9bVXFIzjyc"></div>
     </div>
 
     <button id="createButton" class="create-btn" onclick="createScript()">⚡ สร้าง Script ID</button>
@@ -249,6 +258,13 @@ async function createScript(){
         return;
     }
 
+    // ดึงค่า Turnstile token จากฟอร์ม
+    const turnstileToken = document.querySelector('[name="cf-turnstile-response"]')?.value;
+    if(!turnstileToken){
+        setStatus("สถานะ: ❌ กรุณายืนยันตัวตนผ่าน Turnstile ก่อนสร้าง Script", "error");
+        return;
+    }
+
     createButton.disabled = true;
     createButton.textContent = "⏳ กำลังสร้าง...";
     resultBox.classList.remove("show");
@@ -264,7 +280,8 @@ async function createScript(){
             body: JSON.stringify({ 
                 script: script, 
                 password: password, 
-                createKey: createKey 
+                createKey: createKey,
+                "cf-turnstile-response": turnstileToken 
             })
         });
 
@@ -281,9 +298,17 @@ async function createScript(){
         resultBox.classList.add("show");
         setStatus("สถานะ: ✅ สร้าง Script ID สำเร็จ", "success");
 
+        // รีเซ็ต Turnstile widget หากต้องการให้ทำรายการใหม่
+        if (typeof turnstile !== 'undefined') {
+            turnstile.reset();
+        }
+
     }catch(error){
         console.error(error);
         setStatus("สถานะ: ❌ " + error.message, "error");
+        if (typeof turnstile !== 'undefined') {
+            turnstile.reset();
+        }
     }finally{
         createButton.disabled = false;
         createButton.textContent = "⚡ สร้าง Script ID";
