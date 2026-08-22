@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#080808">
     <title>PISIT HUB • Dashboard</title>
-    <!-- ✅ โหลด Turnstile API -->
+    <!-- ✅ ยังมี Turnstile (แต่หลังบ้านไม่ตรวจ) -->
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <style>
         *{box-sizing:border-box;margin:0;padding:0;}
@@ -133,9 +133,9 @@
                 <input type="password" id="createKeyInput" class="pass-field" placeholder="กรอกรหัสสร้างสคริปต์..." value="pisit_secret_pass_1234">
             </div>
 
-            <!-- ✅ Turnstile Widget - ใช้ Site Key จากรูป -->
+            <!-- ✅ Turnstile ยังอยู่ (แต่หลังบ้านไม่ตรวจ) -->
             <div class="turnstile-box">
-                <div class="cf-turnstile" data-sitekey="0x4AAAAAAEXoKM9bVXFIzjyc" data-callback="onTurnstileSuccess"></div>
+                <div class="cf-turnstile" data-sitekey="0x4AAAAAAExoKM9bVXFIzjyc" data-callback="onTurnstileSuccess"></div>
             </div>
 
             <button id="createButton" class="create-btn" onclick="createScript()">⚡ สร้าง Script ID</button>
@@ -181,14 +181,12 @@
 
         let turnstileToken = null;
 
-        // ✅ Callback เมื่อ Turnstile สำเร็จ
         window.onTurnstileSuccess = function(token) {
             turnstileToken = token;
             setStatus("✅ ยืนยันตัวตนสำเร็จ! กดสร้างได้เลย", "success");
             console.log("✅ Turnstile token:", token.substring(0, 20) + "...");
         };
 
-        // ✅ Callback เมื่อ Turnstile หมดอายุ
         window.onTurnstileExpire = function() {
             turnstileToken = null;
             setStatus("⚠️ Turnstile หมดอายุ กรุณาติ๊กใหม่", "error");
@@ -227,100 +225,4 @@
 
         function clearScript() {
             scriptInput.value = "";
-            enablePass.checked = false;
-            passInputBox.classList.remove("show");
-            scriptPassword.value = "";
-            updateCounter();
-            resultBox.classList.remove("show");
-            setStatus("สถานะ: พร้อมใช้งาน", "");
-        }
-
-        function setStatus(message, type = "") {
-            statusBox.textContent = message;
-            statusBox.className = "status";
-            if (type) statusBox.classList.add(type);
-        }
-
-        // ✅ ฟังก์ชันหลัก - สร้าง Script
-        async function createScript() {
-            const script = scriptInput.value.trim();
-            const password = enablePass.checked ? scriptPassword.value.trim() : "";
-            const createKey = createKeyInput.value.trim();
-
-            if (!script) {
-                setStatus("❌ กรุณาใส่ Lua Script หรืออัปโหลดไฟล์ก่อน", "error");
-                scriptInput.focus();
-                return;
-            }
-
-            // ✅ ตรวจสอบ Turnstile Token
-            if (!turnstileToken) {
-                setStatus("❌ กรุณารอติ๊กถูก Turnstile ก่อนสร้าง Script", "error");
-                return;
-            }
-
-            createButton.disabled = true;
-            createButton.textContent = "⏳ กำลังสร้าง...";
-            resultBox.classList.remove("show");
-            setStatus("⏳ กำลังส่งข้อมูล...");
-
-            try {
-                const response = await fetch(API_URL + "/api/create", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-Create-Key": createKey
-                    },
-                    body: JSON.stringify({
-                        script: script,
-                        password: password,
-                        createKey: createKey,
-                        "cf-turnstile-response": turnstileToken
-                    })
-                });
-
-                const data = await response.json();
-
-                if (!response.ok || !data.ok) {
-                    throw new Error(data.error || "สร้าง Script ไม่สำเร็จ");
-                }
-
-                scriptId.textContent = data.id;
-                scriptUrl.value = data.url;
-                loadstringUrl.value = `loadstring(game:HttpGet("${data.url}"))()`;
-
-                resultBox.classList.add("show");
-                setStatus("✅ สร้าง Script ID สำเร็จ", "success");
-
-                // ✅ รีเซ็ต Turnstile ให้กดต่อได้
-                if (typeof turnstile !== 'undefined') {
-                    turnstile.reset();
-                    turnstileToken = null;
-                }
-
-            } catch (error) {
-                console.error(error);
-                setStatus("❌ " + error.message, "error");
-            } finally {
-                createButton.disabled = false;
-                createButton.textContent = "⚡ สร้าง Script ID";
-            }
-        }
-
-        async function copyText(elementId, successMessage) {
-            const inputElement = document.getElementById(elementId);
-            if (!inputElement.value) return;
-            try {
-                await navigator.clipboard.writeText(inputElement.value);
-            } catch {
-                inputElement.select();
-                document.execCommand("copy");
-            }
-            setStatus(successMessage, "success");
-        }
-
-        updateCounter();
-    </script>
-
-</body>
-</html>
+            enable
