@@ -5,373 +5,73 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#080808">
     <title>PISIT HUB • Dashboard</title>
+    <!-- ✅ โหลด Turnstile API -->
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+        *{box-sizing:border-box;margin:0;padding:0;}
+        :root{--red:#ff3030;--bg:#060606;--card:#111;--border:#292929;--text:#f5f5f5;--muted:#888;}
+        body{
+            min-height:100vh;
+            background:radial-gradient(circle at 50% -15%, #4a1010 0%, #1b0707 25%, #090909 55%, #050505 100%);
+            color:var(--text);font-family:Arial,Helvetica,sans-serif;
         }
-        :root {
-            --red: #ff3030;
-            --bg: #060606;
-            --card: #111;
-            --border: #292929;
-            --text: #f5f5f5;
-            --muted: #888;
+        .navbar{
+            height:65px;display:flex;align-items:center;justify-content:space-between;
+            padding:0 7%;border-bottom:1px solid #202020;background:rgba(5,5,5,.8);
+            backdrop-filter:blur(12px);position:sticky;top:0;z-index:100;
         }
-        body {
-            min-height: 100vh;
-            background: radial-gradient(circle at 50% -15%, #4a1010 0%, #1b0707 25%, #090909 55%, #050505 100%);
-            color: var(--text);
-            font-family: Arial, Helvetica, sans-serif;
-        }
-        .navbar {
-            height: 65px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 7%;
-            border-bottom: 1px solid #202020;
-            background: rgba(5, 5, 5, .8);
-            backdrop-filter: blur(12px);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        .brand {
-            font-size: 19px;
-            font-weight: 1000;
-            letter-spacing: 3px;
-        }
-        .brand span {
-            color: var(--red);
-        }
-        .nav-status {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            color: #777;
-            font-size: 11px;
-        }
-        .dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: #40d46b;
-            box-shadow: 0 0 10px #40d46b;
-        }
-        .protect-badge {
-            display: inline-block;
-            background: rgba(255, 48, 48, 0.1);
-            border: 1px solid rgba(255, 48, 48, 0.2);
-            padding: 2px 10px;
-            border-radius: 12px;
-            font-size: 9px;
-            color: #ff6060;
-            margin-left: 8px;
-        }
-        .hero {
-            text-align: center;
-            padding: 70px 20px 45px;
-        }
-        .logo {
-            color: #ff3030;
-            font-family: monospace;
-            font-size: clamp(6px, 1.5vw, 13px);
-            line-height: 1.08;
-            font-weight: 900;
-            white-space: pre;
-            overflow: auto;
-            display: inline-block;
-            text-align: left;
-        }
-        .hub {
-            margin-top: 10px;
-            font-size: 29px;
-            font-weight: 1000;
-            letter-spacing: 11px;
-        }
-        .hero-text {
-            max-width: 550px;
-            margin: 15px auto 0;
-            color: #777;
-            font-size: 13px;
-            line-height: 1.7;
-        }
-        .container {
-            width: 92%;
-            max-width: 900px;
-            margin: auto;
-        }
-        .card {
-            background: linear-gradient(145deg, rgba(23, 23, 23, .95), rgba(9, 9, 9, .95));
-            border: 1px solid var(--border);
-            border-radius: 18px;
-            padding: 20px;
-            margin-bottom: 18px;
-            box-shadow: 0 15px 50px rgba(0, 0, 0, .3);
-        }
-        .card-title {
-            font-size: 17px;
-            font-weight: 900;
-            margin-bottom: 5px;
-        }
-        .card-subtitle {
-            color: #666;
-            font-size: 11px;
-            margin-bottom: 17px;
-        }
-        .upload-box {
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: #080808;
-            border: 1px dashed #333;
-            padding: 12px 15px;
-            border-radius: 11px;
-            cursor: pointer;
-            transition: .2s;
-        }
-        .upload-box:hover {
-            border-color: var(--red);
-        }
-        .upload-label {
-            color: #aaa;
-            font-size: 12px;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            width: 100%;
-        }
-        .upload-label input {
-            display: none;
-        }
-        .editor {
-            width: 100%;
-            min-height: 280px;
-            background: #050505;
-            border: 1px solid #292929;
-            border-radius: 13px;
-            padding: 15px;
-            color: #eee;
-            outline: none;
-            resize: vertical;
-            font-family: Consolas, monospace;
-            font-size: 13px;
-            line-height: 1.6;
-        }
-        .editor:focus {
-            border-color: #9f2828;
-        }
-        .controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 12px;
-            gap: 10px;
-        }
-        .counter {
-            color: #666;
-            font-size: 10px;
-        }
-        .clear-btn {
-            background: #171717;
-            color: #aaa;
-            border: 1px solid #292929;
-            border-radius: 9px;
-            padding: 8px 12px;
-            cursor: pointer;
-        }
-        .password-section {
-            margin-top: 15px;
-            background: #080808;
-            border: 1px solid #222;
-            border-radius: 12px;
-            padding: 15px;
-        }
-        .toggle-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: pointer;
-        }
-        .toggle-label {
-            font-size: 12px;
-            font-weight: bold;
-            color: #ccc;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 40px;
-            height: 22px;
-        }
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #222;
-            transition: .3s;
-            border-radius: 22px;
-            border: 1px solid #333;
-        }
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 16px;
-            width: 16px;
-            left: 2px;
-            bottom: 2px;
-            background-color: #888;
-            transition: .3s;
-            border-radius: 50%;
-        }
-        input:checked+.slider {
-            background-color: var(--red);
-        }
-        input:checked+.slider:before {
-            transform: translateX(18px);
-            background-color: #fff;
-        }
-        .pass-input-box {
-            display: none;
-            margin-top: 12px;
-        }
-        .pass-input-box.show {
-            display: block;
-        }
-        .pass-field {
-            width: 100%;
-            background: #050505;
-            border: 1px solid #292929;
-            border-radius: 9px;
-            padding: 11px;
-            color: #fff;
-            font-size: 12px;
-            outline: none;
-        }
-        .pass-field:focus {
-            border-color: #9f2828;
-        }
-        .turnstile-box {
-            margin-top: 15px;
-            display: flex;
-            justify-content: center;
-        }
-        .create-btn {
-            width: 100%;
-            margin-top: 15px;
-            padding: 15px;
-            border: 0;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #ff3535, #b81616);
-            color: white;
-            font-size: 15px;
-            font-weight: 900;
-            cursor: pointer;
-            box-shadow: 0 8px 25px rgba(255, 30, 30, .18);
-            transition: .2s;
-        }
-        .create-btn:hover {
-            filter: brightness(1.1);
-        }
-        .create-btn:disabled {
-            opacity: .5;
-            cursor: not-allowed;
-        }
-        .result {
-            display: none;
-            margin-top: 18px;
-            padding: 16px;
-            background: #090909;
-            border: 1px solid #292929;
-            border-radius: 13px;
-        }
-        .result.show {
-            display: block;
-        }
-        .result-label {
-            color: #777;
-            font-size: 10px;
-            margin-bottom: 6px;
-            margin-top: 12px;
-        }
-        .result-label:first-child {
-            margin-top: 0;
-        }
-        .script-id {
-            color: #ff3b3b;
-            font-family: monospace;
-            font-size: 26px;
-            font-weight: 900;
-            letter-spacing: 3px;
-            margin-bottom: 5px;
-        }
-        .url-box {
-            display: flex;
-            gap: 8px;
-        }
-        .url {
-            flex: 1;
-            min-width: 0;
-            background: #111;
-            border: 1px solid #292929;
-            border-radius: 9px;
-            padding: 11px;
-            color: #ddd;
-            font-family: monospace;
-            font-size: 11px;
-        }
-        .copy-btn {
-            border: 1px solid #383838;
-            background: #181818;
-            color: white;
-            border-radius: 9px;
-            padding: 0 15px;
-            font-weight: 800;
-            cursor: pointer;
-        }
-        .copy-btn:hover {
-            border-color: #b72828;
-        }
-        .status {
-            margin-top: 12px;
-            padding: 10px 12px;
-            border-radius: 9px;
-            background: #090909;
-            border: 1px solid #242424;
-            color: #777;
-            font-size: 11px;
-        }
-        .status.success {
-            color: #65dc83;
-            border-color: #1d4728;
-        }
-        .status.error {
-            color: #ff5050;
-            border-color: #4a2020;
-        }
-        .footer {
-            text-align: center;
-            color: #444;
-            font-size: 10px;
-            padding: 30px 0 20px;
-        }
+        .brand{font-size:19px;font-weight:1000;letter-spacing:3px;}
+        .brand span{color:var(--red);}
+        .nav-status{display:flex;align-items:center;gap:7px;color:#777;font-size:11px;}
+        .dot{width:7px;height:7px;border-radius:50%;background:#40d46b;box-shadow:0 0 10px #40d46b;}
+        .protect-badge{display:inline-block;background:rgba(255,48,48,.1);border:1px solid rgba(255,48,48,.2);padding:2px 10px;border-radius:12px;font-size:9px;color:#ff6060;margin-left:8px;}
+        .hero{text-align:center;padding:70px 20px 45px;}
+        .logo{color:#ff3030;font-family:monospace;font-size:clamp(6px,1.5vw,13px);line-height:1.08;font-weight:900;white-space:pre;overflow:auto;display:inline-block;text-align:left;}
+        .hub{margin-top:10px;font-size:29px;font-weight:1000;letter-spacing:11px;}
+        .hero-text{max-width:550px;margin:15px auto 0;color:#777;font-size:13px;line-height:1.7;}
+        .container{width:92%;max-width:900px;margin:auto;}
+        .card{background:linear-gradient(145deg,rgba(23,23,23,.95),rgba(9,9,9,.95));border:1px solid var(--border);border-radius:18px;padding:20px;margin-bottom:18px;box-shadow:0 15px 50px rgba(0,0,0,.3);}
+        .card-title{font-size:17px;font-weight:900;margin-bottom:5px;}
+        .card-subtitle{color:#666;font-size:11px;margin-bottom:17px;}
+        .upload-box{margin-bottom:12px;display:flex;align-items:center;gap:10px;background:#080808;border:1px dashed #333;padding:12px 15px;border-radius:11px;cursor:pointer;transition:.2s;}
+        .upload-box:hover{border-color:var(--red);}
+        .upload-label{color:#aaa;font-size:12px;font-weight:bold;cursor:pointer;display:flex;align-items:center;gap:8px;width:100%;}
+        .upload-label input{display:none;}
+        .editor{width:100%;min-height:280px;background:#050505;border:1px solid #292929;border-radius:13px;padding:15px;color:#eee;outline:none;resize:vertical;font-family:Consolas,monospace;font-size:13px;line-height:1.6;}
+        .editor:focus{border-color:#9f2828;}
+        .controls{display:flex;justify-content:space-between;align-items:center;margin-top:12px;gap:10px;}
+        .counter{color:#666;font-size:10px;}
+        .clear-btn{background:#171717;color:#aaa;border:1px solid #292929;border-radius:9px;padding:8px 12px;cursor:pointer;}
+        .password-section{margin-top:15px;background:#080808;border:1px solid #222;border-radius:12px;padding:15px;}
+        .toggle-row{display:flex;align-items:center;justify-content:space-between;cursor:pointer;}
+        .toggle-label{font-size:12px;font-weight:bold;color:#ccc;display:flex;align-items:center;gap:8px;}
+        .switch{position:relative;display:inline-block;width:40px;height:22px;}
+        .switch input{opacity:0;width:0;height:0;}
+        .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:#222;transition:.3s;border-radius:22px;border:1px solid #333;}
+        .slider:before{position:absolute;content:"";height:16px;width:16px;left:2px;bottom:2px;background-color:#888;transition:.3s;border-radius:50%;}
+        input:checked+.slider{background-color:var(--red);}
+        input:checked+.slider:before{transform:translateX(18px);background-color:#fff;}
+        .pass-input-box{display:none;margin-top:12px;}
+        .pass-input-box.show{display:block;}
+        .pass-field{width:100%;background:#050505;border:1px solid #292929;border-radius:9px;padding:11px;color:#fff;font-size:12px;outline:none;}
+        .pass-field:focus{border-color:#9f2828;}
+        .turnstile-box{margin-top:15px;display:flex;justify-content:center;}
+        .create-btn{width:100%;margin-top:15px;padding:15px;border:0;border-radius:12px;background:linear-gradient(135deg,#ff3535,#b81616);color:white;font-size:15px;font-weight:900;cursor:pointer;box-shadow:0 8px 25px rgba(255,30,30,.18);transition:.2s;}
+        .create-btn:hover{filter:brightness(1.1);}
+        .create-btn:disabled{opacity:.5;cursor:not-allowed;}
+        .result{display:none;margin-top:18px;padding:16px;background:#090909;border:1px solid #292929;border-radius:13px;}
+        .result.show{display:block;}
+        .result-label{color:#777;font-size:10px;margin-bottom:6px;margin-top:12px;}
+        .result-label:first-child{margin-top:0;}
+        .script-id{color:#ff3b3b;font-family:monospace;font-size:26px;font-weight:900;letter-spacing:3px;margin-bottom:5px;}
+        .url-box{display:flex;gap:8px;}
+        .url{flex:1;min-width:0;background:#111;border:1px solid #292929;border-radius:9px;padding:11px;color:#ddd;font-family:monospace;font-size:11px;}
+        .copy-btn{border:1px solid #383838;background:#181818;color:white;border-radius:9px;padding:0 15px;font-weight:800;cursor:pointer;}
+        .copy-btn:hover{border-color:#b72828;}
+        .status{margin-top:12px;padding:10px 12px;border-radius:9px;background:#090909;border:1px solid #242424;color:#777;font-size:11px;}
+        .status.success{color:#65dc83;border-color:#1d4728;}
+        .status.error{color:#ff5050;border-color:#4a2020;}
+        .footer{text-align:center;color:#444;font-size:10px;padding:30px 0 20px;}
     </style>
 </head>
 <body>
@@ -433,9 +133,9 @@
                 <input type="password" id="createKeyInput" class="pass-field" placeholder="กรอกรหัสสร้างสคริปต์..." value="pisit_secret_pass_1234">
             </div>
 
-            <!-- ✅ Turnstile Widget (Site Key ใหม่จากรูป) -->
+            <!-- ✅ Turnstile Widget - ใช้ Site Key จากรูป -->
             <div class="turnstile-box">
-                <div class="cf-turnstile" data-sitekey="0x4AAAAAAExoKM9bVXFIzjyc" data-callback="onTurnstileSuccess"></div>
+                <div class="cf-turnstile" data-sitekey="0x4AAAAAAEXoKM9bVXFIzjyc" data-callback="onTurnstileSuccess"></div>
             </div>
 
             <button id="createButton" class="create-btn" onclick="createScript()">⚡ สร้าง Script ID</button>
@@ -481,11 +181,14 @@
 
         let turnstileToken = null;
 
+        // ✅ Callback เมื่อ Turnstile สำเร็จ
         window.onTurnstileSuccess = function(token) {
             turnstileToken = token;
             setStatus("✅ ยืนยันตัวตนสำเร็จ! กดสร้างได้เลย", "success");
+            console.log("✅ Turnstile token:", token.substring(0, 20) + "...");
         };
 
+        // ✅ Callback เมื่อ Turnstile หมดอายุ
         window.onTurnstileExpire = function() {
             turnstileToken = null;
             setStatus("⚠️ Turnstile หมดอายุ กรุณาติ๊กใหม่", "error");
@@ -538,6 +241,7 @@
             if (type) statusBox.classList.add(type);
         }
 
+        // ✅ ฟังก์ชันหลัก - สร้าง Script
         async function createScript() {
             const script = scriptInput.value.trim();
             const password = enablePass.checked ? scriptPassword.value.trim() : "";
@@ -549,6 +253,7 @@
                 return;
             }
 
+            // ✅ ตรวจสอบ Turnstile Token
             if (!turnstileToken) {
                 setStatus("❌ กรุณารอติ๊กถูก Turnstile ก่อนสร้าง Script", "error");
                 return;
@@ -587,6 +292,7 @@
                 resultBox.classList.add("show");
                 setStatus("✅ สร้าง Script ID สำเร็จ", "success");
 
+                // ✅ รีเซ็ต Turnstile ให้กดต่อได้
                 if (typeof turnstile !== 'undefined') {
                     turnstile.reset();
                     turnstileToken = null;
