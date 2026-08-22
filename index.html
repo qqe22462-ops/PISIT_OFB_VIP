@@ -61,6 +61,16 @@
             background: #40d46b;
             box-shadow: 0 0 10px #40d46b;
         }
+        .protect-badge {
+            display: inline-block;
+            background: rgba(255, 48, 48, 0.1);
+            border: 1px solid rgba(255, 48, 48, 0.2);
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 9px;
+            color: #ff6060;
+            margin-left: 8px;
+        }
         .hero {
             text-align: center;
             padding: 70px 20px 45px;
@@ -362,16 +372,6 @@
             font-size: 10px;
             padding: 30px 0 20px;
         }
-        .protect-badge {
-            display: inline-block;
-            background: rgba(255, 48, 48, 0.1);
-            border: 1px solid rgba(255, 48, 48, 0.2);
-            padding: 2px 10px;
-            border-radius: 12px;
-            font-size: 9px;
-            color: #ff6060;
-            margin-left: 8px;
-        }
     </style>
 </head>
 <body>
@@ -433,8 +433,9 @@
                 <input type="password" id="createKeyInput" class="pass-field" placeholder="กรอกรหัสสร้างสคริปต์..." value="pisit_secret_pass_1234">
             </div>
 
+            <!-- ✅ Turnstile Widget (Site Key ใหม่จากรูป) -->
             <div class="turnstile-box">
-                <div class="cf-turnstile" data-sitekey="0x4AAAAAAEXoKM9bVXFIZjJyc" data-callback="onTurnstileSuccess"></div>
+                <div class="cf-turnstile" data-sitekey="0x4AAAAAAExoKM9bVXFIzjyc" data-callback="onTurnstileSuccess"></div>
             </div>
 
             <button id="createButton" class="create-btn" onclick="createScript()">⚡ สร้าง Script ID</button>
@@ -483,7 +484,6 @@
         window.onTurnstileSuccess = function(token) {
             turnstileToken = token;
             setStatus("✅ ยืนยันตัวตนสำเร็จ! กดสร้างได้เลย", "success");
-            console.log("✅ Turnstile token:", token.substring(0, 20) + "...");
         };
 
         window.onTurnstileExpire = function() {
