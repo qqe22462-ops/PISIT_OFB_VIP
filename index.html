@@ -152,9 +152,8 @@ input:checked + .slider:before{transform:translateX(18px);background-color:#fff;
         <input type="password" id="createKeyInput" class="pass-field" placeholder="กรอกรหัสสร้างสคริปต์..." value="pisit_secret_pass_1234">
     </div>
 
-    <!-- ✅ Turnstile Widget -->
-    <div class="turnstile-box">
-        <div class="cf-turnstile" data-sitekey="0x4AAAAAAEXoKM9bVXFIzjyc" data-callback="onTurnstileSuccess"></div>
+    <!-- เปลี่ยน data-sitekey จากของเก่า -->
+<div class="cf-turnstile" data-sitekey="0x4AAAAAAEXoKM9bVXFIZjJyc" data-callback="onTurnstileSuccess"></div>
     </div>
 
     <button id="createButton" class="create-btn" onclick="createScript()">⚡ สร้าง Script ID</button>
