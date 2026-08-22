@@ -152,6 +152,7 @@ input:checked + .slider:before{transform:translateX(18px);background-color:#fff;
         <input type="password" id="createKeyInput" class="pass-field" placeholder="กรอกรหัสสร้างสคริปต์..." value="pisit_secret_pass_1234">
     </div>
 
+    <!-- ✅ Turnstile Widget -->
     <div class="turnstile-box">
         <div class="cf-turnstile" data-sitekey="0x4AAAAAAEXoKM9bVXFIzjyc" data-callback="onTurnstileSuccess"></div>
     </div>
@@ -199,9 +200,11 @@ const createKeyInput = document.getElementById("createKeyInput");
 
 let turnstileToken = null;
 
+// ✅ Callback เมื่อ Turnstile สำเร็จ
 window.onTurnstileSuccess = function(token) {
     turnstileToken = token;
-    setStatus("✅ ยืนยันตัวตนสำเร็จ!", "success");
+    setStatus("✅ ยืนยันตัวตนสำเร็จ! กดสร้างได้เลย", "success");
+    console.log("✅ Turnstile token received:", token.substring(0, 20) + "...");
 };
 
 scriptInput.addEventListener("input", updateCounter);
@@ -262,6 +265,7 @@ async function createScript(){
         return;
     }
 
+    // ✅ ตรวจสอบ Turnstile Token
     if(!turnstileToken){
         setStatus("❌ กรุณารอติ๊กถูก Turnstile ก่อนสร้าง Script", "error");
         return;
@@ -300,14 +304,14 @@ async function createScript(){
         resultBox.classList.add("show");
         setStatus("✅ สร้าง Script ID สำเร็จ", "success");
 
-        // รีเซ็ต Turnstile
+        // ✅ รีเซ็ต Turnstile ให้กดต่อได้
         if (typeof turnstile !== 'undefined') {
             turnstile.reset();
             turnstileToken = null;
         }
 
     }catch(error){
-        console.error(error);
+        console.error("❌ Error:", error);
         setStatus("❌ " + error.message, "error");
     }finally{
         createButton.disabled = false;
